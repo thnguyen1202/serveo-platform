@@ -1,0 +1,24 @@
+{
+  "appName": "Serveo Admin",
+
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create"
+  },
+
+  "menu": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "roles": "Roles",
+    "settings": "Settings"
+  },
+
+  "validation": {
+    "required": "This field is required.",
+    "theRequired": "The {{name}} field is required.",
+    "minLength": "Must be at least {{count}} characters"
+  }
+}

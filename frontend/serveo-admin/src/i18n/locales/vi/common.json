@@ -1,0 +1,22 @@
+{
+  "appName": "Serveo Admin",
+
+  "actions": {
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "create": "Tạo mới"
+  },
+
+  "menu": {
+    "dashboard": "Tổng quan",
+    "users": "Người dùng",
+    "roles": "Vai trò",
+    "settings": "Cấu hình"
+  },
+
+  "validation": {
+    "required": "Trường bắt buộc."
+  }
+}
