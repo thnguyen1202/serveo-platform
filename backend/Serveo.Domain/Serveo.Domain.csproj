@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Abstractions\Mediator\**" />
+    <EmbeddedResource Remove="Abstractions\Mediator\**" />
+    <None Remove="Abstractions\Mediator\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Entities\Authorization\TenantNotification.cs" />
+    <Compile Remove="Entities\Authorization\Translation.cs" />
+    <Compile Remove="Entities\Authorization\UserNotification.cs" />
+    <Compile Remove="Entities\Base\AuditedEntity.cs" />
+    <Compile Remove="Entities\Base\CreationAuditedEntity.cs" />
+    <Compile Remove="Entities\Base\FullAuditedEntity.cs" />
+    <Compile Remove="Entities\Base\IAudited.cs" />
+    <Compile Remove="Entities\Base\ICreationAudited.cs" />
+    <Compile Remove="Entities\Base\IDeletionAudited.cs" />
+    <Compile Remove="Entities\Base\IFullAudited.cs" />
+    <Compile Remove="Entities\Base\IModificationAudited.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Authentication\" />
+    <Folder Include="Entities\Outbox\" />
+    <Folder Include="Entities\SaaS\Billing\" />
+    <Folder Include="Entities\SaaS\Promotion\" />
+    <Folder Include="Events\" />
+    <Folder Include="Enums\" />
+    <Folder Include="ValueObjects\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Serveo.SharedKernel\Serveo.SharedKernel.csproj" />
+  </ItemGroup>
+
+</Project>

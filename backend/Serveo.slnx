@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="Serveo.Application/Serveo.Application.csproj" />
+  <Project Path="Serveo.BackgroundJobs/Serveo.BackgroundJobs.csproj" />
+  <Project Path="Serveo.Domain/Serveo.Domain.csproj" />
+  <Project Path="Serveo.Infrastructure/Serveo.Infrastructure.csproj" />
+  <Project Path="Serveo.SharedKernel/Serveo.SharedKernel.csproj" Id="979fb0aa-0d39-4673-a3fd-21d948609196" />
+  <Project Path="Serveo.WebApi/Serveo.WebApi.csproj" Id="41a19793-9217-4bb4-8046-1fbc2f5bfc5d" />
+</Solution>

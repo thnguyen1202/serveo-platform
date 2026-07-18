@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Services\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="Services\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="DependencyInjection\ApplicationServicesServiceCollectionExtensions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Abstractions\Authentication\" />
+    <Folder Include="Abstractions\Caching\" />
+    <Folder Include="Abstractions\Messaging\" />
+    <Folder Include="Abstractions\Persistence\" />
+    <Folder Include="Features\Identity\Auth\Logout\" />
+    <Folder Include="Features\Catalog\MenuItems\" />
+    <Folder Include="Features\Kitchen\" />
+    <Folder Include="Features\Ordering\Payment\" />
+    <Folder Include="Features\Reporting\" />
+    <Folder Include="Features\Ordering\Payments\" />
+    <Folder Include="Features\Identity\Roles\" />
+    <Folder Include="Features\Identity\Users\CreateUser\" />
+    <Folder Include="Features\Identity\Users\DeleteUser\" />
+    <Folder Include="Features\Identity\Users\UpdateUser\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.11" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.19.2" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Serveo.Domain\Serveo.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
