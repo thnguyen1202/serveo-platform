@@ -1,0 +1,93 @@
+https://chatgpt.com/g/g-p-6a51107598c881918d4de51497629f49/c/6a511735-03a8-83ec-b208-501a45b75492
+
+Tạo project React
+Chạy: npm create vite@latest serveo-admin -- --template react-ts
+
+Cài package
+npm install
+
+Chạy thử
+npm run dev
+
+Select a framework: 
+Chọn: React
+
+Select a variant:
+Chọn: TypeScript
+
+Which linter to use?
+Chọn: ESLint
+
+cài thêm Prettier
+npm install -D prettier eslint-config-prettier eslint-plugin-prettier
+
+--Cài UI shadcn/ui--
+Cài Tailwind CSS
+npm install tailwindcss @tailwindcss/vite
+Mở vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
+});
+
+Validating import alias.
+Mở tsconfig.app.json + tsconfig.json
+Thêm baseUrl và paths
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  }
+}
+Cấu hình Vite alias
+Mở: vite.config.ts
+import path from "path";
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+});
+
+Cài Node types nếu báo lỗi path
+npm install -D @types/node
+
+Cài shadcn/ui
+npx shadcn@latest init
+Nếu vẫn lỗi, dùng bản ổn định: npx shadcn@4.12.0 init
+Select a component library
+Chọn: Radix
+Which preset would you like to use?
+Chọn: Nova - Lucide / Geist
+
+Cài các component cần thiết
+npx shadcn@latest add button
+npx shadcn@latest add input
+npx shadcn@latest add label
+npx shadcn@latest add card
+npx shadcn@latest add form
+npx shadcn@latest add table
+npx shadcn@latest add dialog
+npx shadcn@latest add dropdown-menu
+npx shadcn@latest add sheet
+npx shadcn@latest add separator
+npx shadcn@latest add tabs
+npx shadcn@latest add badge
+npx shadcn@latest add avatar
+npx shadcn@latest add alert-dialog
+npx shadcn@latest add toast

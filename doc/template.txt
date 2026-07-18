@@ -1,0 +1,2 @@
+https://github.com/satnaing/shadcn-admin
+https://github.com/shadcnstudio/shadcn-nextjs-admincn-admin-template-free
