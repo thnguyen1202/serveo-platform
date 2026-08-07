@@ -1,6 +1,16 @@
 {
-  "appName": "Serveo Admin",
-
+  "appName": "Serveo",
+  "save": "Lưu",
+  "cancel": "Hủy",
+  "delete": "Xóa",
+  "language": "Ngôn ngữ",
+  "login": {
+    "title": "Đăng nhập",
+    "username": "Tên đăng nhập",
+    "password": "Mật khẩu",
+    "submit": "Đăng nhập"
+  },
+  
   "actions": {
     "save": "Lưu",
     "cancel": "Hủy",

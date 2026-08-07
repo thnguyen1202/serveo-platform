@@ -1,6 +1,7 @@
-import { apiClient } from '@/core/http/api-client';
+import { apiClient } from '@/core/api/api.client';
 
-import type { LoginRequest, LoginResponse, UserInfo } from '../types/auth.types';
+import type { LoginRequest, LoginResponse } from '../types/auth.types';
+import type { AuthUser } from '@/core/auth/auth.types';
 
 export async function login(request: LoginRequest) {
   const response = await apiClient.post<LoginResponse>('/auth/login', request);
@@ -8,14 +9,8 @@ export async function login(request: LoginRequest) {
   return response.data;
 }
 
-// export async function login(request: LoginRequest): Promise<LoginResponse> {
-//   const response = await api.post<LoginResponse>('/auth/login', request);
-
-//   return response.data;
-// }
-
-export async function getCurrentUser() {
-  const response = await apiClient.get<UserInfo>('/auth/me');
+export async function me() {
+  const response = await apiClient.get<AuthUser>('/auth/me');
 
   return response.data;
 }

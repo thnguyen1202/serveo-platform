@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export const loginSchema = z.object({
   // email: z.string().email(),
-  email: z.string().trim().min(1, 'validation.required').email(),
+  email: z.string().trim().min(1, 'validation.required').email({ message: 'Invalid email format.' }),
   // username: z.string().min(8, {
   //   message: JSON.stringify({
   //     key: 'validation.minLength',

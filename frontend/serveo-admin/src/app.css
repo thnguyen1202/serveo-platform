@@ -1,0 +1,17 @@
+:root {
+  --sidebar-accent: oklch(0.97 0.01 248);
+}
+
+.CollapsibleContent {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 300ms ease;
+}
+
+.CollapsibleContent[aria-hidden='false'] {
+  grid-template-rows: 1fr;
+}
+
+.CollapsibleContent > * {
+  overflow: hidden;
+}

@@ -17,15 +17,18 @@
     "jsx": "react-jsx",
 
     /* Linting */
+    "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": false,
+    "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
 
-    /*Alias*/
-    "baseUrl": ".",
+    /* LƯU Ý QUAN TRỌNG CHO TS 7 */
+    "rootDir": "./",            // TS 7 mặc định rootDir là "./", hãy khai báo rõ ràng
+
+    /* Alias */
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src"]

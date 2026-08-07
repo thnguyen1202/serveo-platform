@@ -6,14 +6,5 @@ export interface LoginRequest {
 export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
-}
-
-export interface UserInfo {
-  id: string;
-  username: string;
-  email: string;
-  displayName: string;
-  tenantId?: string;
-  branchId?: string;
-  permissions: string[];
+  expiresIn: number;
 }
