@@ -8,5 +8,8 @@
         Guid? BranchId { get; }
         bool IsAuthenticated { get; }
         bool IsSuperAdmin { get; }
+        string? IpAddress { get; }
+        string? UserAgent { get; }
+        string? RequestId { get; }
     }
 }

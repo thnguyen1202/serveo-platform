@@ -39,7 +39,7 @@ namespace Serveo.Application.Features.Tenanting.Businesses.Paging
                     .AsEnumerable();
             #endregion
 
-            return new PagedResult<BusinessDto>(mapper.Map<IReadOnlyList<BusinessDto>>(items), itemCount);
+            return new PagedResult<BusinessDto>(mapper.Map<IReadOnlyList<BusinessDto>>(items), itemCount, request.Query.PageIndex, request.Query.PageSize);
         }
     }
 }

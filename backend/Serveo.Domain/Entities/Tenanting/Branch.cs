@@ -12,5 +12,6 @@ namespace Serveo.Domain.Entities.Tenanting
 
 
         public Business Business { get; set; } = default!;
+        public ICollection<TenantMemberBranch> TenantMemberBranches { get; private set; } = [];
     }
 }

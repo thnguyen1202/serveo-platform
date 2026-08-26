@@ -8,7 +8,12 @@ namespace Serveo.Infrastructure.Persistence.EntityFramework.Configurations.Modul
     {
         public void Configure(EntityTypeBuilder<Permission> builder)
         {
+            builder.Property(u => u.Code).HasMaxLength(128);
             builder.Property(u => u.Name).HasMaxLength(128);
+            builder.Property(u => u.Description).HasMaxLength(512);
+            builder.Property(u => u.Module).HasMaxLength(128);
+
+            builder.HasIndex(x => x.Code).IsUnique();
         }
     }
 }

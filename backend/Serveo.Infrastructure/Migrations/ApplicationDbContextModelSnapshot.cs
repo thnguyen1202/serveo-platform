@@ -17,7 +17,7 @@ namespace Serveo.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.9")
+                .HasAnnotation("ProductVersion", "10.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -221,9 +221,22 @@ namespace Serveo.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<bool>("IsGranted")
-                        .HasColumnType("bit")
-                        .HasColumnName("is_granted");
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("code");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Module")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("module");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -231,21 +244,33 @@ namespace Serveo.Infrastructure.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasColumnName("name");
 
+                    b.HasKey("Id")
+                        .HasName("pk_permissions");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("ix_permissions_code");
+
+                    b.ToTable("permissions");
+                });
+
+            modelBuilder.Entity("Serveo.Domain.Entities.Authorization.RolePermission", b =>
+                {
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("role_id");
 
-                    b.Property<Guid?>("TenantId")
+                    b.Property<Guid>("PermissionId")
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("tenant_id");
+                        .HasColumnName("permission_id");
 
-                    b.HasKey("Id")
-                        .HasName("pk_permissions");
+                    b.HasKey("RoleId", "PermissionId")
+                        .HasName("pk_role_permissions");
 
-                    b.HasIndex("RoleId")
-                        .HasDatabaseName("ix_permissions_role_id");
+                    b.HasIndex("PermissionId")
+                        .HasDatabaseName("ix_role_permissions_permission_id");
 
-                    b.ToTable("permissions");
+                    b.ToTable("role_permissions");
                 });
 
             modelBuilder.Entity("Serveo.Domain.Entities.Authorization.Setting", b =>
@@ -467,7 +492,34 @@ namespace Serveo.Infrastructure.Migrations
                     b.ToTable("menus");
                 });
 
-            modelBuilder.Entity("Serveo.Domain.Entities.Catalog.MenuItem", b =>
+            modelBuilder.Entity("Serveo.Domain.Entities.Catalog.MenuCategory", b =>
+                {
+                    b.Property<Guid>("MenuId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("menu_id");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("category_id");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int")
+                        .HasColumnName("display_order");
+
+                    b.Property<bool>("IsVisible")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_visible");
+
+                    b.HasKey("MenuId", "CategoryId")
+                        .HasName("pk_menu_categories");
+
+                    b.HasIndex("CategoryId")
+                        .HasDatabaseName("ix_menu_categories_category_id");
+
+                    b.ToTable("menu_categories");
+                });
+
+            modelBuilder.Entity("Serveo.Domain.Entities.Catalog.MenuProduct", b =>
                 {
                     b.Property<Guid>("MenuId")
                         .HasColumnType("uniqueidentifier")
@@ -477,13 +529,25 @@ namespace Serveo.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("product_id");
 
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int")
+                        .HasColumnName("display_order");
+
+                    b.Property<bool>("IsVisible")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_visible");
+
+                    b.Property<decimal?>("PriceOverride")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("price_override");
+
                     b.HasKey("MenuId", "ProductId")
-                        .HasName("pk_menu_items");
+                        .HasName("pk_menu_products");
 
                     b.HasIndex("ProductId")
-                        .HasDatabaseName("ix_menu_items_product_id");
+                        .HasDatabaseName("ix_menu_products_product_id");
 
-                    b.ToTable("menu_items");
+                    b.ToTable("menu_products");
                 });
 
             modelBuilder.Entity("Serveo.Domain.Entities.Catalog.MenuTranslation", b =>
@@ -666,6 +730,12 @@ namespace Serveo.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)")
+                        .HasColumnName("code");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasMaxLength(128)
@@ -675,6 +745,11 @@ namespace Serveo.Infrastructure.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset")
                         .HasColumnName("created_at");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)")
+                        .HasColumnName("description");
 
                     b.Property<bool>("IsDefault")
                         .HasColumnType("bit")
@@ -705,6 +780,11 @@ namespace Serveo.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("role_name_index")
                         .HasFilter("[normalized_name] IS NOT NULL");
+
+                    b.HasIndex("TenantId", "Code")
+                        .IsUnique()
+                        .HasDatabaseName("ix_roles_tenant_id_code")
+                        .HasFilter("[tenant_id] IS NOT NULL");
 
                     b.ToTable("roles", (string)null);
                 });
@@ -942,6 +1022,79 @@ namespace Serveo.Infrastructure.Migrations
                         .HasDatabaseName("ix_user_roles_role_id");
 
                     b.ToTable("user_roles", (string)null);
+                });
+
+            modelBuilder.Entity("Serveo.Domain.Entities.Identity.UserSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset?>("AbsoluteExpiresAt")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("absolute_expires_at");
+
+                    b.Property<int>("ClientType")
+                        .HasColumnType("int")
+                        .HasColumnName("client_type");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("DeviceId")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)")
+                        .HasColumnName("device_id");
+
+                    b.Property<DateTimeOffset>("ExpiresAt")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("expires_at");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)")
+                        .HasColumnName("ip_address");
+
+                    b.Property<DateTimeOffset>("LastActivityAt")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("last_activity_at");
+
+                    b.Property<string>("PreviousTokenHash")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)")
+                        .HasColumnName("previous_token_hash");
+
+                    b.Property<string>("RefreshTokenHash")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)")
+                        .HasColumnName("refresh_token_hash");
+
+                    b.Property<DateTimeOffset?>("RevokedAt")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("revoked_at");
+
+                    b.Property<string>("UserAgent")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)")
+                        .HasColumnName("user_agent");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_user_sessions");
+
+                    b.HasIndex("UserId", "DeviceId", "ClientType")
+                        .IsUnique()
+                        .HasDatabaseName("ix_user_sessions_user_id_device_id_client_type");
+
+                    b.ToTable("user_sessions", (string)null);
                 });
 
             modelBuilder.Entity("Serveo.Domain.Entities.Identity.UserToken", b =>
@@ -1497,6 +1650,68 @@ namespace Serveo.Infrastructure.Migrations
                     b.ToTable("tenants");
                 });
 
+            modelBuilder.Entity("Serveo.Domain.Entities.Tenanting.TenantMember", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("IsAllBranches")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_all_branches");
+
+                    b.Property<DateTimeOffset>("JoinedAt")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("joined_at");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("role_id");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_tenant_members");
+
+                    b.HasIndex("RoleId")
+                        .HasDatabaseName("ix_tenant_members_role_id");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_tenant_members_user_id");
+
+                    b.HasIndex("TenantId", "UserId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_tenant_members_tenant_id_user_id");
+
+                    b.ToTable("tenant_members");
+                });
+
+            modelBuilder.Entity("Serveo.Domain.Entities.Tenanting.TenantMemberBranch", b =>
+                {
+                    b.Property<Guid>("TenantMemberId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("tenant_member_id");
+
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("branch_id");
+
+                    b.HasKey("TenantMemberId", "BranchId")
+                        .HasName("pk_tenant_member_branches");
+
+                    b.HasIndex("BranchId")
+                        .HasDatabaseName("ix_tenant_member_branches_branch_id");
+
+                    b.ToTable("tenant_member_branches");
+                });
+
             modelBuilder.Entity("Serveo.Domain.Entities.Authorization.ApiClientKey", b =>
                 {
                     b.HasOne("Serveo.Domain.Entities.Authorization.ApiClient", "Client")
@@ -1509,14 +1724,23 @@ namespace Serveo.Infrastructure.Migrations
                     b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("Serveo.Domain.Entities.Authorization.Permission", b =>
+            modelBuilder.Entity("Serveo.Domain.Entities.Authorization.RolePermission", b =>
                 {
-                    b.HasOne("Serveo.Domain.Entities.Identity.RefreshToken", "Role")
+                    b.HasOne("Serveo.Domain.Entities.Authorization.Permission", "Permission")
                         .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_role_permissions_permissions_permission_id");
+
+                    b.HasOne("Serveo.Domain.Entities.Identity.Role", "Role")
+                        .WithMany("RolePermissions")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_permissions_refresh_tokens_role_id");
+                        .HasConstraintName("fk_role_permissions_roles_role_id");
+
+                    b.Navigation("Permission");
 
                     b.Navigation("Role");
                 });
@@ -1557,21 +1781,42 @@ namespace Serveo.Infrastructure.Migrations
                     b.Navigation("Business");
                 });
 
-            modelBuilder.Entity("Serveo.Domain.Entities.Catalog.MenuItem", b =>
+            modelBuilder.Entity("Serveo.Domain.Entities.Catalog.MenuCategory", b =>
                 {
+                    b.HasOne("Serveo.Domain.Entities.Catalog.Category", "Category")
+                        .WithMany("MenuCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_menu_categories_categories_category_id");
+
                     b.HasOne("Serveo.Domain.Entities.Catalog.Menu", "Menu")
-                        .WithMany("Items")
+                        .WithMany("MenuCategories")
                         .HasForeignKey("MenuId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_menu_items_menus_menu_id");
+                        .HasConstraintName("fk_menu_categories_menus_menu_id");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Menu");
+                });
+
+            modelBuilder.Entity("Serveo.Domain.Entities.Catalog.MenuProduct", b =>
+                {
+                    b.HasOne("Serveo.Domain.Entities.Catalog.Menu", "Menu")
+                        .WithMany("MenuProducts")
+                        .HasForeignKey("MenuId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_menu_products_menus_menu_id");
 
                     b.HasOne("Serveo.Domain.Entities.Catalog.Product", "Product")
-                        .WithMany("MenuItems")
+                        .WithMany("MenuProducts")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_menu_items_products_product_id");
+                        .HasConstraintName("fk_menu_products_products_product_id");
 
                     b.Navigation("Menu");
 
@@ -1796,6 +2041,57 @@ namespace Serveo.Infrastructure.Migrations
                     b.Navigation("Tenant");
                 });
 
+            modelBuilder.Entity("Serveo.Domain.Entities.Tenanting.TenantMember", b =>
+                {
+                    b.HasOne("Serveo.Domain.Entities.Identity.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_tenant_members_roles_role_id");
+
+                    b.HasOne("Serveo.Domain.Entities.Tenanting.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_tenant_members_tenants_tenant_id");
+
+                    b.HasOne("Serveo.Domain.Entities.Identity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_tenant_members_users_user_id");
+
+                    b.Navigation("Role");
+
+                    b.Navigation("Tenant");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Serveo.Domain.Entities.Tenanting.TenantMemberBranch", b =>
+                {
+                    b.HasOne("Serveo.Domain.Entities.Tenanting.Branch", "Branch")
+                        .WithMany("TenantMemberBranches")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_tenant_member_branches_branches_branch_id");
+
+                    b.HasOne("Serveo.Domain.Entities.Tenanting.TenantMember", "TenantMember")
+                        .WithMany("TenantMemberBranches")
+                        .HasForeignKey("TenantMemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_tenant_member_branches_tenant_members_tenant_member_id");
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("TenantMember");
+                });
+
             modelBuilder.Entity("Serveo.Domain.Entities.Authorization.ApiClient", b =>
                 {
                     b.Navigation("ClientKeys");
@@ -1803,6 +2099,8 @@ namespace Serveo.Infrastructure.Migrations
 
             modelBuilder.Entity("Serveo.Domain.Entities.Catalog.Category", b =>
                 {
+                    b.Navigation("MenuCategories");
+
                     b.Navigation("Products");
 
                     b.Navigation("Translations");
@@ -1810,21 +2108,38 @@ namespace Serveo.Infrastructure.Migrations
 
             modelBuilder.Entity("Serveo.Domain.Entities.Catalog.Menu", b =>
                 {
-                    b.Navigation("Items");
+                    b.Navigation("MenuCategories");
+
+                    b.Navigation("MenuProducts");
 
                     b.Navigation("Translations");
                 });
 
             modelBuilder.Entity("Serveo.Domain.Entities.Catalog.Product", b =>
                 {
-                    b.Navigation("MenuItems");
+                    b.Navigation("MenuProducts");
 
                     b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("Serveo.Domain.Entities.Identity.Role", b =>
+                {
+                    b.Navigation("RolePermissions");
                 });
 
             modelBuilder.Entity("Serveo.Domain.Entities.Ordering.Order", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Serveo.Domain.Entities.Tenanting.Branch", b =>
+                {
+                    b.Navigation("TenantMemberBranches");
+                });
+
+            modelBuilder.Entity("Serveo.Domain.Entities.Tenanting.TenantMember", b =>
+                {
+                    b.Navigation("TenantMemberBranches");
                 });
 #pragma warning restore 612, 618
         }

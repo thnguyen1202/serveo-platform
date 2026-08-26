@@ -10,5 +10,6 @@
 
         public int AccessTokenLifetimeMinutes { get; init; } = 15;
         public int RefreshTokenLifetimeDays { get; init; } = 30;
+        public int MaxSessionsPerClientType { get; init; } = 5;
     }
 }

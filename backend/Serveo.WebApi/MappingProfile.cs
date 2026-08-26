@@ -2,6 +2,7 @@
 using Serveo.Application.Dtos.Tenanting;
 using Serveo.Application.Features.Catalog.Products.Create;
 using Serveo.Application.Features.Identity.Auth.Login;
+using Serveo.Application.Features.Identity.Auth.RefreshToken;
 using Serveo.Application.Features.Ordering.Tables.Create;
 using Serveo.Application.Features.Tenanting.Branches.Create;
 using Serveo.Application.Features.Tenanting.RegisterTenant;
@@ -20,6 +21,7 @@ namespace Serveo.WebApi
             _ = services.AddAutoMapper(cfg =>
             {
                 cfg.CreateMap<LoginResult, LoginResponse>();
+                cfg.CreateMap<RefreshTokenResult, RefreshTokenResponse>();
 
                 cfg.CreateMap<CreateBranchResult, CreateOutletResponse>();
 

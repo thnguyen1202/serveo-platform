@@ -1,4 +1,8 @@
-﻿namespace Serveo.WebApi.DependencyInjection
+﻿using Microsoft.AspNetCore.Authorization;
+using Serveo.Infrastructure.Authentication.Permissions;
+using Serveo.WebApi.Handlers.AuthorizationHandlers;
+
+namespace Serveo.WebApi.DependencyInjection
 {
     public static class ApplicationAuthorizationServiceCollectionExtensions
     {
@@ -26,6 +30,17 @@
             //});
 
             services.AddAuthorization();
+
+            // Register the IPermissionService implementation
+            services.AddScoped<IPermissionService, PermissionService>();
+
+            services.AddSingleton<
+                IAuthorizationPolicyProvider,
+                PermissionPolicyProvider>();
+
+            services.AddSingleton<
+                IAuthorizationHandler,
+                PermissionAuthorizationHandler>();
 
             return services;
         }

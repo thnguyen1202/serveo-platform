@@ -16,7 +16,7 @@ namespace Serveo.Application.Features.Catalog.Menus.Items.Create
 
         public async Task<ICommandResult<CreateMenuItemResult>> HandleAsync(CreateMenuItemCommand request, CancellationToken ct)
         {
-            var menuItems = request.ProductIds.Select(s => new MenuItem { MenuId = request.MenuId, ProductId = s });
+            var menuItems = request.ProductIds.Select(s => new MenuProduct { MenuId = request.MenuId, ProductId = s });
             //_unitOfWork.Set<MenuItem>().AddRange(menuItems);
             await _unitOfWork.SaveChangesAsync(ct);
 

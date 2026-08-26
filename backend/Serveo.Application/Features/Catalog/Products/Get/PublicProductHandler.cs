@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Serveo.Application.Abstractions;
 using Serveo.Application.Abstractions.Mediator;
-using Serveo.Domain.Entities.Catalog;
 
 namespace Serveo.Application.Features.Catalog.Products.Get
 {

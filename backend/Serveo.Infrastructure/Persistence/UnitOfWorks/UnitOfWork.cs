@@ -16,6 +16,12 @@ namespace Serveo.Infrastructure.Persistence.UnitOfWorks
 
         public ISessionContext Session { get; } = session;
 
+
+        public ITenantMemberRepository TenantMembers => new TenantMemberRepository(_dbContext);
+
+        public IUserSessionRepository UserSessions => new UserSessionRepository(_dbContext);
+        public IRefreshTokenRepository RefreshTokens => new RefreshTokenRepository(_dbContext);
+
         public IUserRepository Users => new UserRepository(_dbContext);
         public IRoleRepository Roles => new RoleRepository(_dbContext);
 

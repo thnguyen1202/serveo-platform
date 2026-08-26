@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Serveo.Application.Abstractions;
 using Serveo.Application.Abstractions.Mediator;
 using Serveo.Application.Dtos.Ordering;
-using Serveo.Domain.Entities.Ordering;
 
 namespace Serveo.Application.Features.Ordering.QR
 {

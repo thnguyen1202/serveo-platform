@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serveo.Application.Abstractions;
 using Serveo.Application.Abstractions.Mediator;
@@ -15,11 +16,8 @@ namespace Serveo.Application.Features.Identity.Auth.Login
         IUnitOfWork unitOfWork,
         UserManager<User> userManager,
         SignInManager<User> signInManager,
+        ITokenService tokenService,
         IOptions<JwtOptions> jwtOptions
-    //ILoginApiKeyGuard apiKeyGuard,
-    //IRequestContext requestContext,
-    //IMapper mapper,
-    //ILogger<LoginCommandHandler> logger
     ) : ICommandHandler<LoginCommand, ICommandResult<LoginResult>>
     {
         private readonly JwtOptions _jwtOptions = jwtOptions.Value;
@@ -32,6 +30,11 @@ namespace Serveo.Application.Features.Identity.Auth.Login
                 return CommandResult<LoginResult>.Failure(
                     CommandErrors.Unauthorized(ErrorCodes.Auth.InvalidCredentials, "Invalid credentials."));
 
+            if (request.ClientType == ClientType.Admin && user.TenantId.HasValue ||
+                request.ClientType == ClientType.Ops && !user.TenantId.HasValue)
+                return CommandResult<LoginResult>.Failure(
+                    CommandErrors.Unauthorized(ErrorCodes.Auth.InvalidCredentials, "Invalid credentials."));
+
             if (!user.EmailConfirmed)
                 return CommandResult<LoginResult>.Failure(
                     CommandErrors.Unauthorized(ErrorCodes.Auth.InvalidConfirmed, "User not confirmed yet."));
@@ -40,12 +43,19 @@ namespace Serveo.Application.Features.Identity.Auth.Login
             var signinResult = await signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure);
             if (signinResult.Succeeded)
             {
-                var principal = await signInManager.CreateUserPrincipalAsync(user);
-                var claims = GetClaims(user, principal);
-                var accessToken = JwtHelper.GenerateAccessToken(claims, _jwtOptions);
-                var (refreshToken, refreshTokenHash) = JwtHelper.GenerateRefreshToken();
-                var loginResult = new LoginResult(accessToken, refreshToken, _jwtOptions.AccessTokenLifetimeMinutes * 60);
-                await CreateRefreshTokenAsync(user.Id, refreshTokenHash, request.Ip);
+                var tokenPair = await tokenService.CreateTokenPairAsync(
+                    user,
+                    request.ClientType,
+                    request.DeviceId,
+                    request.IpAddress,
+                    request.UserAgent,
+                    request.IsRemember,
+                    ct);
+
+                var loginResult = new LoginResult(
+                    tokenPair.AccessToken,
+                    tokenPair.RefreshToken,
+                    tokenPair.ExpiresInSeconds);
 
                 return CommandResult<LoginResult>.Success(loginResult);
             }
@@ -57,10 +67,7 @@ namespace Serveo.Application.Features.Identity.Auth.Login
             }
             else
             {
-                var errors = new List<CommandError>()
-                {
-                    CommandErrors.Unauthorized( ErrorCodes.Auth.InvalidLoginAttempt, "Invalid login attempt.")
-                };
+                var message = "Invalid login attempt.";
                 string remaining = "";
                 if (lockoutOnFailure)
                 {
@@ -69,10 +76,10 @@ namespace Serveo.Application.Features.Identity.Auth.Login
                 }
                 if (!string.IsNullOrWhiteSpace(remaining))
                 {
-                    errors.Add(CommandErrors.Unauthorized("REMAINING_ATTEMPTS", remaining));
+                    message += $" {remaining}";
                 }
 
-                return CommandResult<LoginResult>.Failure(errors);
+                return CommandResult<LoginResult>.Failure(CommandErrors.Unauthorized(ErrorCodes.Auth.InvalidLoginAttempt, message));
             }
         }
 
@@ -135,13 +142,62 @@ namespace Serveo.Application.Features.Identity.Auth.Login
 
         private async Task CreateRefreshTokenAsync(Guid userId, string refreshTokenHash, string? createdByIp)
         {
-            //_ = unitOfWork.Set<RefreshToken>().Add(new Domain.Entities.Identity.RefreshToken
-            //{
-            //    UserId = userId,
-            //    TokenHash = refreshTokenHash,
-            //    CreatedByIp = createdByIp,
-            //    ExpiresAt = DateTime.UtcNow.AddDays(30)
-            //});
+            unitOfWork.RefreshTokens.Add(new Domain.Entities.Identity.RefreshToken
+            {
+                UserId = userId,
+                TokenHash = refreshTokenHash,
+                CreatedByIp = createdByIp,
+                ExpiresAt = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenLifetimeDays)
+            });
+
+            await unitOfWork.SaveChangesAsync();
+        }
+
+        private async Task CreateUserSessionAsync(
+            Guid userId,
+            string refreshTokenHash,
+            LoginCommand request)
+        {
+            var sessions = await unitOfWork.UserSessions.Query()
+                .Where(x => x.UserId == userId && x.ClientType == request.ClientType)
+                .OrderBy(x => x.LastActivityAt)
+                .ToListAsync();
+
+            var session = sessions.FirstOrDefault(x => x.DeviceId == request.DeviceId);
+            if (session is null)
+            {
+                if (sessions.Count < _jwtOptions.MaxSessionsPerClientType)
+                {
+
+                    session = new UserSession
+                    {
+                        UserId = userId,
+                        ClientType = request.ClientType
+                    };
+
+                    unitOfWork.UserSessions.Add(session);
+                }
+                else
+                {
+                    session = sessions[0];
+                }
+            }
+
+            var now = DateTimeOffset.UtcNow;
+            var absoluteLifetime = request.IsRemember ? 90 : _jwtOptions.RefreshTokenLifetimeDays;
+
+            session.Replace(
+                request.DeviceId,
+                refreshTokenHash,
+                //request.DeviceName,
+                //request.Browser,
+                //request.OperatingSystem,
+                request.IpAddress,
+                request.UserAgent,
+                now,
+                _jwtOptions.RefreshTokenLifetimeDays,
+                absoluteLifetime);
+
             await unitOfWork.SaveChangesAsync();
         }
     }

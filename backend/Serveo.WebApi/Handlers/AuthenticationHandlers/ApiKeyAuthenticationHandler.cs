@@ -102,14 +102,14 @@ namespace Serveo.WebApi.Handlers.AuthenticationHandlers
         protected override async Task HandleChallengeAsync(AuthenticationProperties properties)
         {
             var statusCode = StatusCodes.Status401Unauthorized;
-            var failureReason = properties?.Items.TryGetValue("FailureReason", out var reason) == true ? reason : "UNKNOWN";
+            var failureReason = properties?.Items.TryGetValue("FailureReason", out var reason) == true ? reason : "MISSING_API_KEY";
 
             var problem = new ApiProblemDetails
             {
                 Type = ProblemTypeCatalog.FromStatusCode(statusCode),
                 Title = ProblemTitleCatalog.FromStatusCode(statusCode),
                 Status = statusCode,
-                Detail = "Authentication is required.",
+                Detail = "API key is required.",
                 Instance = $"{Response.HttpContext.Request.Method} {Response.HttpContext.Request.Path}",
                 TraceId = Response.HttpContext.TraceIdentifier,
                 Errors =

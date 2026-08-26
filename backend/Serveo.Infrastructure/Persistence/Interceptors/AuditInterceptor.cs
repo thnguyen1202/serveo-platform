@@ -70,7 +70,14 @@ namespace Serveo.Infrastructure.Persistence.Interceptors
 
                 // Thêm AuditLog vào DbSet, EF sẽ commit cùng transaction
                 context.Set<AuditLog>().Add(
-                    auditEntry.ToAuditLog(_session.TenantId, _session.UserId)
+                    auditEntry.ToAuditLog(
+                        _session.TenantId,
+                        _session.UserId,
+                        new AuditMetadata(
+                            IpAddress: _session.IpAddress,
+                            UserAgent: _session.UserAgent,
+                            RequestId: _session.RequestId
+                        ))
                 );
             }
 

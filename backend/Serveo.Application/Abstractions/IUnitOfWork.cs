@@ -18,6 +18,9 @@ namespace Serveo.Application.Abstractions
         IProductRepository Products { get; }
         ITableRepository Tables { get; }
         IOrderRepository Orders { get; }
+        IRefreshTokenRepository RefreshTokens { get; }
+        IUserSessionRepository UserSessions { get; }
+        ITenantMemberRepository TenantMembers { get; }
 
         void Add<TEntity>(TEntity entity) where TEntity : class;
         //Task BeginTransactionAsync(CancellationToken ct = default);

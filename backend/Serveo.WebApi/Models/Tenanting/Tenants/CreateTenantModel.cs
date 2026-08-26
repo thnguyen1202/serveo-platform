@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Serveo.WebApi.Models.Tenants
+namespace Serveo.WebApi.Models.Tenanting.Tenants
 {
     public class CreateTenantModel
     {

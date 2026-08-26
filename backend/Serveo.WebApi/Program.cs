@@ -1,14 +1,62 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Scalar.AspNetCore;
 using Serveo.Application;
+using Serveo.Application.Abstractions;
 using Serveo.Application.DependencyInjection;
+using Serveo.Infrastructure.Authentication.Jwt;
+using Serveo.Infrastructure.Authentication.Tokens;
 using Serveo.Infrastructure.Persistence.EntityFramework.Seed;
 using Serveo.WebApi;
 using Serveo.WebApi.DependencyInjection;
 using Serveo.WebApi.Handlers.ExceptionHandler;
 using System.Text.Json;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// 1. Đăng ký Rate Limiter Policy cho CSRF
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("CsrfRateLimit", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 32,                         // Tối đa 32 request
+                Window = TimeSpan.FromMinutes(1),        // Trong vòng 1 phút
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
+
+    options.AddPolicy("LoginRateLimit", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 8,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
+
+
+    // Xử lý khi vượt quá giới hạn
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
+
+// Đăng ký dịch vụ Antiforgery
+builder.Services.AddAntiforgery(options =>
+{
+    // Đặt tên Header mà React sẽ gửi lên
+    options.HeaderName = "X-CSRF-TOKEN";
+
+    // Cookie chứa bí mật chống giả mạo của .NET
+    options.Cookie.Name = "XSRF-TOKEN-COOKIE";
+    options.Cookie.HttpOnly = false;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.Path = "/api/auth";
+});
 
 
 
@@ -22,9 +70,23 @@ builder.Services.AddIdentityConfigue(); // Identity Configue
 builder.Services.AddApplicationAuthentication(builder.Configuration); // Authentication
 builder.Services.AddApplicationAuthorization(); // Authorization
 
+
+
+
+builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+builder.Services.AddScoped<IRefreshTokenFactory, RefreshTokenFactory>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+
 builder.Services.AddMediatorHandler(); // Mediator
 builder.Services.AddApplicationMappingProfile(); // ApplicationMapping
 builder.Services.AddWebApiMappingProfile(); // WebApiMapping
+builder.Services.AddScoped<Serveo.Application.CommandMapper>(); // CommandMapper
+builder.Services.AddScoped<Serveo.WebApi.Models.PayloadMapper>(); // PayloadMapper
+
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.MinimumSameSitePolicy = SameSiteMode.None;
+});
 
 builder.Services.AddCors(options =>
 {
@@ -36,6 +98,16 @@ builder.Services.AddCors(options =>
             )
             .AllowAnyHeader()
             .AllowAnyMethod();
+    });
+    options.AddPolicy("ServeoOps", policy =>
+    {
+        policy
+            .WithOrigins(
+                "http://localhost:5173"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
@@ -110,6 +182,16 @@ builder.Services.AddProblemDetails(options =>
             }
         }
     };
+});
+
+// Nếu chạy sau Proxy / Cloudflare / Nginx
+// RemoteIpAddress có thể là IP proxy.
+// Cần bật Forwarded Headers:
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor |
+        ForwardedHeaders.XForwardedProto;
 });
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -196,19 +278,26 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
 
-    // https://scalar.com/products/api-references/integrations/aspnetcore/integration
-    app.MapScalarApiReference(options =>
-    {
-        options.SortTagsAlphabetically();
-    });
 
 #if DEBUG
     using var scope = app.Services.CreateScope();
     SeedDataDefault.Initialize(scope.ServiceProvider);
 #endif
 }
+
+app.MapOpenApi();
+
+// https://scalar.com/products/api-references/integrations/aspnetcore/integration
+app.MapScalarApiReference(options =>
+{
+    options.SortTagsAlphabetically();
+});
+
+app.MapGet("/env", (IWebHostEnvironment env) =>
+{
+    return env.EnvironmentName;
+});
 
 
 app.UseHttpsRedirection();
@@ -217,8 +306,8 @@ app.UseForwardedHeaders();
 app.UseExceptionHandler(); // ExceptionHandler
 
 //app.UseMiddleware<ExceptionMiddleware>(); // Đăng ký middleware
-
-app.UseCors("AdminCors");
+app.UseRateLimiter(); // Bật Middleware Rate Limiting
+app.UseCors("ServeoOps");
 
 app.UseAuthentication();
 app.UseAuthorization();

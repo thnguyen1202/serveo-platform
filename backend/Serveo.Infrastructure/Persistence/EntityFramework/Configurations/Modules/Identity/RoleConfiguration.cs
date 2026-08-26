@@ -9,7 +9,16 @@ namespace Serveo.Infrastructure.Persistence.EntityFramework.Configurations.Modul
         public void Configure(EntityTypeBuilder<Role> builder)
         {
             builder.ToTable("Roles");
+            builder.Property(u => u.Code).HasMaxLength(128);
             builder.Property(u => u.ConcurrencyStamp).HasMaxLength(128);
+            builder.Property(u => u.Description).HasMaxLength(512);
+
+            builder.HasIndex(x => new
+            {
+                x.TenantId,
+                x.Code
+            })
+            .IsUnique();
         }
     }
 }

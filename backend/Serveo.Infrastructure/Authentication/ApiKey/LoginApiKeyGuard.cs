@@ -1,6 +1,4 @@
-﻿using Serveo.Application.Abstractions;
-
-namespace Serveo.Infrastructure.Authentication.ApiKey
+﻿namespace Serveo.Infrastructure.Authentication.ApiKey
 {
     // Protect login with API key without forcing JWT
     // This is my preferred approach for login endpoints because login is [AllowAnonymous] from the user perspective, but still gated by client API key.

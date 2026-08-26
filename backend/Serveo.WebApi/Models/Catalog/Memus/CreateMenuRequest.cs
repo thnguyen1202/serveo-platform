@@ -11,7 +11,7 @@ namespace Serveo.WebApi.Models.Catalog.Memus
         [StringLength(512)]
         public string? Description { get; set; }
 
-        public Guid BusinessId { get; set; }
+        public Guid? BusinessId { get; set; }
 
     }
 }

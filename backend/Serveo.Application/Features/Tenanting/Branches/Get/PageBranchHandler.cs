@@ -4,7 +4,6 @@ using Serveo.Application.Abstractions;
 using Serveo.Application.Abstractions.Mediator;
 using Serveo.Application.Dtos.Tenanting;
 using Serveo.Application.Services;
-using Serveo.Domain.Entities.Tenanting;
 
 namespace Serveo.Application.Features.Tenanting.Branches.Get
 {
@@ -42,7 +41,7 @@ namespace Serveo.Application.Features.Tenanting.Branches.Get
                     .AsEnumerable();
             #endregion
 
-            return new PagedResult<BranchDto>(_mapper.Map<IReadOnlyList<BranchDto>>(items), itemCount);
+            return new PagedResult<BranchDto>(_mapper.Map<IReadOnlyList<BranchDto>>(items), itemCount, request.Query.PageIndex, request.Query.PageSize);
         }
     }
 }

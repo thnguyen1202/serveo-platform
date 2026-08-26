@@ -93,27 +93,13 @@ namespace Serveo.WebApi.DependencyInjection
                         context.HandleResponse();
 
                         if (context.Response.HasStarted) return;
-                        context.Response.Clear();
 
                         var statusCode = StatusCodes.Status401Unauthorized;
+                        var problem = JwtChallengeErrorProblem(context, statusCode);
 
                         // 2. Set the response metadata FIRST
                         context.Response.StatusCode = statusCode;
                         context.Response.ContentType = "application/json";
-
-                        var problem = new ApiProblemDetails
-                        {
-                            Type = ProblemTypeCatalog.FromStatusCode(statusCode),
-                            Title = ProblemTitleCatalog.FromStatusCode(statusCode),
-                            Status = statusCode,
-                            Detail = "Authentication is required.",
-                            Instance = $"{context.Request.Method} {context.Request.Path}",
-                            TraceId = Activity.Current?.Id,
-                            Errors =
-                            [
-                                new() {Code = ErrorCodes.Auth.InvalidAccessToken, Message = "Invalid token or token expired."}
-                            ]
-                        };
 
                         // 3. Write to the body LAST (this starts/freezes the response)
                         await context.Response.WriteAsJsonAsync(problem);
@@ -142,28 +128,37 @@ namespace Serveo.WebApi.DependencyInjection
                         await context.Response.WriteAsJsonAsync(problem);
                     },
 
-                    OnAuthenticationFailed = async context =>
-                    {
-                        var statusCode = StatusCodes.Status401Unauthorized;
-                        var problem = new ApiProblemDetails
-                        {
-                            Type = ProblemTypeCatalog.FromStatusCode(statusCode),
-                            Title = ProblemTitleCatalog.FromStatusCode(statusCode),
-                            Status = statusCode,
-                            Detail = "Authentication failed.",
-                            Instance = $"{context.Request.Method} {context.Request.Path}",
-                            TraceId = Activity.Current?.Id,
-                            Errors =
-                            [
-                                new() {Code = ErrorCodes.Auth.PermissionDenied, Message = "Permission denied."}
-                            ]
-                        };
+                    //OnAuthenticationFailed = context =>
+                    //{
+                    //    //if (context.Exception is SecurityTokenExpiredException)
+                    //    //{
+                    //    //    logger.LogInformation("Expired JWT");
+                    //    //}
 
-                        context.Response.StatusCode = statusCode;
-                        context.Response.ContentType = "application/json";
+                    //    Console.WriteLine(context.Exception);
 
-                        await context.Response.WriteAsJsonAsync(problem);
-                    }
+                    //    return Task.CompletedTask;
+
+                    //    //var statusCode = StatusCodes.Status401Unauthorized;
+                    //    //var problem = new ApiProblemDetails
+                    //    //{
+                    //    //    Type = ProblemTypeCatalog.FromStatusCode(statusCode),
+                    //    //    Title = ProblemTitleCatalog.FromStatusCode(statusCode),
+                    //    //    Status = statusCode,
+                    //    //    Detail = "Authentication failed.",
+                    //    //    Instance = $"{context.Request.Method} {context.Request.Path}",
+                    //    //    TraceId = Activity.Current?.Id,
+                    //    //    Errors =
+                    //    //    [
+                    //    //        new() {Code = ErrorCodes.Auth.PermissionDenied, Message = "Permission denied."}
+                    //    //    ]
+                    //    //};
+
+                    //    //context.Response.StatusCode = statusCode;
+                    //    //context.Response.ContentType = "application/json";
+
+                    //    //await context.Response.WriteAsJsonAsync(problem);
+                    //}
                 };
             });
 
@@ -189,6 +184,79 @@ namespace Serveo.WebApi.DependencyInjection
             //});
 
             return services;
+        }
+
+        private static ApiProblemDetails JwtChallengeErrorProblem(JwtBearerChallengeContext context, int statusCode)
+        {
+            var errors = new List<ApiProblemError>();
+
+            if (!context.Request.Headers.ContainsKey("Authorization"))
+            {
+                errors.Add(new ApiProblemError
+                {
+                    Code = "missing_authorization_header",
+                    Message = "The Authorization header is missing."
+                });
+            }
+
+            if (!string.IsNullOrEmpty(context.Error) && !string.IsNullOrEmpty(context.ErrorDescription))
+            {
+                errors.Add(new ApiProblemError
+                {
+                    Code = context.Error,
+                    Message = context.ErrorDescription
+                });
+            }
+
+            if (context.AuthenticateFailure != null)
+            {
+                if (!string.IsNullOrEmpty(context.AuthenticateFailure.Message))
+                {
+                    var code = context.AuthenticateFailure switch
+                    {
+                        SecurityTokenExpiredException =>
+                            "token_expired",
+
+                        SecurityTokenInvalidSignatureException =>
+                            "invalid_signature",
+
+                        SecurityTokenInvalidAudienceException =>
+                            "invalid_audience",
+
+                        SecurityTokenInvalidIssuerException =>
+                            "invalid_issuer",
+
+                        _ => "invalid_token"
+                    };
+                    errors.Add(new ApiProblemError
+                    {
+                        Code = code,
+                        Message = context.AuthenticateFailure.Message
+                    });
+                }
+            }
+
+            if (errors.Count == 0)
+            {
+                errors.Add(new ApiProblemError
+                {
+                    Code = "invalid_token",
+                    Message = "The access token is missing, expired, or invalid."
+                });
+            }
+
+            var problem = new ApiProblemDetails
+            {
+                Type = ProblemTypeCatalog.FromStatusCode(statusCode),
+                Title = ProblemTitleCatalog.FromStatusCode(statusCode),
+                Status = statusCode,
+                Detail = "The access token is missing, expired, or invalid.",
+                Instance = $"{context.Request.Method} {context.Request.Path}",
+                TraceId = Activity.Current?.Id,
+                Errors = errors
+            };
+
+            return problem;
         }
 
         //public static IServiceCollection AddCmsAuthentication(this IServiceCollection services)

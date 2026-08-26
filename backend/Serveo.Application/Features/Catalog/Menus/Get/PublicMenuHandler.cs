@@ -2,7 +2,6 @@
 using Serveo.Application.Abstractions;
 using Serveo.Application.Abstractions.Mediator;
 using Serveo.Application.Dtos.Catalog;
-using Serveo.Domain.Entities.Catalog;
 
 namespace Serveo.Application.Features.Catalog.Menus.Get
 {

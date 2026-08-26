@@ -1,4 +1,4 @@
-﻿namespace Serveo.WebApi.Models.Tenants
+﻿namespace Serveo.WebApi.Models.Tenanting.Tenants
 {
     public class UpdateTenantModel : CreateTenantModel, IEntityModel<long>
     {

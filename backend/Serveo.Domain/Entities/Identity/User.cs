@@ -16,7 +16,7 @@ namespace Serveo.Domain.Entities.Identity
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset? ModifiedAt { get; set; }
 
-        public UserStatus Status { get; set; }
+        public UserStatus Status { get; set; } = UserStatus.Active;
 
         public void SetNormalizedNames()
         {

@@ -14,7 +14,8 @@ namespace Serveo.Domain.Entities.Catalog
 
 
         public Business Business { get; set; } = default!;
-        public ICollection<MenuItem> Items { get; set; } = default!;
+        public ICollection<MenuProduct> MenuProducts { get; set; } = default!;
+        public ICollection<MenuCategory> MenuCategories { get; set; } = default!;
         public ICollection<MenuTranslation> Translations { get; set; } = default!;
     }
 }

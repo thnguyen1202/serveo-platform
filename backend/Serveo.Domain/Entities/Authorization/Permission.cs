@@ -1,20 +1,12 @@
 ﻿using Serveo.Domain.Entities.Base;
-using Serveo.Domain.Entities.Identity;
 
 namespace Serveo.Domain.Entities.Authorization
 {
-    public sealed class Permission : Entity, IMayHaveTenant
+    public sealed class Permission : Entity
     {
-        public Guid RoleId { get; set; }
-        public Guid? TenantId { get; set; }
-
+        public string Code { get; private set; } = default!;
         public string Name { get; set; } = default!;
-
-        public bool IsGranted { get; set; }
-
-
-        #region Relationships
-        public RefreshToken Role { get; set; } = default!;
-        #endregion
+        public string? Description { get; private set; }
+        public string Module { get; private set; } = null!;
     }
 }

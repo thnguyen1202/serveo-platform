@@ -39,7 +39,8 @@ namespace Serveo.Infrastructure.Persistence.EntityFramework.Seed
                     Email = "administrator@ebizity.com",
                     DisplayName = "Administrator",
                     TimeZoneId = "Singapore Standard Time",
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
+                    CreatedAt = DateTime.UtcNow
                 };
                 adminUser.SetNormalizedNames();
                 adminUser.SetSecurityStamp();

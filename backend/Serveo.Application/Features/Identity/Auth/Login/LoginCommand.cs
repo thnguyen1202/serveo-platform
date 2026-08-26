@@ -1,10 +1,17 @@
 ﻿using Serveo.Application.Abstractions.Mediator;
+using Serveo.Domain.Entities.Identity;
 
 namespace Serveo.Application.Features.Identity.Auth.Login
 {
     public sealed record LoginCommand(
         string Email,
         string Password,
-        string? Ip
-    ) : ICommand<ICommandResult<LoginResult>>;
+        bool IsRemember,
+        ClientType ClientType,
+        string DeviceId,
+        string IpAddress,
+        string UserAgent
+    ) : ICommand<ICommandResult<LoginResult>>
+    {
+    }
 }

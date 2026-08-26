@@ -4,7 +4,6 @@ using Serveo.Application.Abstractions;
 using Serveo.Application.Abstractions.Mediator;
 using Serveo.Application.Dtos.Ordering;
 using Serveo.Application.Services;
-using Serveo.Domain.Entities.Ordering;
 
 namespace Serveo.Application.Features.Ordering.Tables.Get
 {
@@ -42,7 +41,7 @@ namespace Serveo.Application.Features.Ordering.Tables.Get
                     .AsEnumerable();
             #endregion
 
-            return new PagedResult<TableDto>(_mapper.Map<IReadOnlyList<TableDto>>(items), itemCount);
+            return new PagedResult<TableDto>(_mapper.Map<IReadOnlyList<TableDto>>(items), itemCount, request.Query.PageIndex, request.Query.PageSize);
         }
     }
 }

@@ -4,7 +4,6 @@ using Serveo.Application.Abstractions;
 using Serveo.Application.Abstractions.Mediator;
 using Serveo.Application.Dtos.Catalog;
 using Serveo.Application.Services;
-using Serveo.Domain.Entities.Catalog;
 
 namespace Serveo.Application.Features.Catalog.Products.Get
 {
@@ -20,18 +19,18 @@ namespace Serveo.Application.Features.Catalog.Products.Get
         {
             var query = _unitOfWork.Products.Query();
 
-            #region Sorting
-            query = request.Query.Sorting switch
-            {
-                _ => query.OrderByDescending(o => o.CreatedAt),
-            };
-            #endregion
-
             #region Filter
             if (!string.IsNullOrWhiteSpace(request.Query.Filter))
             {
                 query = query.Where(x => !string.IsNullOrWhiteSpace(x.Name) && x.Name.Contains(request.Query.Filter));
             }
+            #endregion
+
+            #region Sorting
+            query = request.Query.Sorting switch
+            {
+                _ => query.OrderByDescending(o => o.CreatedAt),
+            };
             #endregion
 
             #region Paged
@@ -42,7 +41,7 @@ namespace Serveo.Application.Features.Catalog.Products.Get
                     .AsEnumerable();
             #endregion
 
-            return new PagedResult<ProductDto>(_mapper.Map<IReadOnlyList<ProductDto>>(items), itemCount);
+            return new PagedResult<ProductDto>(_mapper.Map<IReadOnlyList<ProductDto>>(items), itemCount, request.Query.PageIndex, request.Query.PageSize);
         }
     }
 }

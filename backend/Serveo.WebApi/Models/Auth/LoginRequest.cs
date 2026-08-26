@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Serveo.Domain.Entities.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace Serveo.WebApi.Models.Auth
 {
@@ -10,23 +11,10 @@ namespace Serveo.WebApi.Models.Auth
         [Required]
         string Password,
 
-        //string? TenantCode = null,
-        string? DeviceId = null,
+        bool IsRemember,
 
-        string? DeviceName = null
+        string DeviceId,
+
+        ClientType ClientType
     );
-
-    //public sealed class LoginRequest
-    //{
-    //    [Required]
-    //    [EmailAddress]
-    //    public string Email { get; set; } = default!;
-
-    //    [Required]
-    //    public string Password { get; set; } = default!;
-
-    //    public string? TenantCode { get; set; }
-    //    public string? DeviceId { get; set; }
-    //    public string? DeviceName { get; set; }
-    //}
 }

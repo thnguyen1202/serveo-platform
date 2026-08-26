@@ -27,6 +27,7 @@ namespace Serveo.Infrastructure.Persistence.EntityFramework
 
 
         #region Identity
+        public DbSet<UserSession> UserSessions { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         #endregion
 
@@ -37,6 +38,8 @@ namespace Serveo.Infrastructure.Persistence.EntityFramework
         public DbSet<Setting> Settings { get; set; }
         public DbSet<ApiClient> ApiClients { get; set; }
         public DbSet<ApiClientKey> ApiClientKeys { get; set; }
+        public DbSet<RolePermission> RolePermissions { get; set; }
+
         //public DbSet<UserNotification> UserNotifications { get; set; }
         #endregion
 
@@ -44,6 +47,8 @@ namespace Serveo.Infrastructure.Persistence.EntityFramework
         public DbSet<Tenant> Tenants { get; set; }
         public DbSet<Branch> Branches { get; set; }
         public DbSet<Business> Businesses { get; set; }
+        public DbSet<TenantMember> TenantMembers { get; set; }
+        public DbSet<TenantMemberBranch> TenantMemberBranches { get; set; }
         //public DbSet<Subscription> Subscriptions { get; set; }
         #endregion
 
@@ -51,7 +56,8 @@ namespace Serveo.Infrastructure.Persistence.EntityFramework
         public DbSet<Category> Categories { get; set; }
         public DbSet<CategoryTranslation> CategoryTranslations { get; set; }
         public DbSet<Menu> Menus { get; set; }
-        public DbSet<MenuItem> MenuItems { get; set; }
+        public DbSet<MenuCategory> MenuCategories { get; set; }
+        public DbSet<MenuProduct> MenuProducts { get; set; }
         public DbSet<MenuTranslation> MenuTranslations { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductTranslation> ProductTranslations { get; set; }

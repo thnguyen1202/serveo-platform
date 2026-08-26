@@ -4,7 +4,6 @@ using Serveo.Application.Abstractions;
 using Serveo.Application.Abstractions.Mediator;
 using Serveo.Application.Dtos.Catalog;
 using Serveo.Application.Services;
-using Serveo.Domain.Entities.Catalog;
 
 namespace Serveo.Application.Features.Catalog.Categories.Get
 {
@@ -42,7 +41,7 @@ namespace Serveo.Application.Features.Catalog.Categories.Get
                     .AsEnumerable();
             #endregion
 
-            return new PagedResult<CategoryDto>(_mapper.Map<IReadOnlyList<CategoryDto>>(items), itemCount);
+            return new PagedResult<CategoryDto>(_mapper.Map<IReadOnlyList<CategoryDto>>(items), itemCount, request.Query.PageIndex, request.Query.PageSize);
         }
     }
 }

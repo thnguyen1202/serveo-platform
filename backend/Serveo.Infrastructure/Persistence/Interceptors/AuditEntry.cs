@@ -21,7 +21,7 @@ namespace Serveo.Infrastructure.Persistence.Interceptors
 
         public bool HasTemporaryProperties => TemporaryProperties.Count > 0;
 
-        public AuditLog ToAuditLog(Guid? tenantId, Guid? userId)
+        public AuditLog ToAuditLog(Guid? tenantId, Guid? userId, AuditMetadata metadata)
         {
             return new AuditLog
             {
@@ -32,8 +32,11 @@ namespace Serveo.Infrastructure.Persistence.Interceptors
                 KeyValues = JsonSerializer.Serialize(KeyValues),
                 OldValues = OldValues.Count == 0 ? null : JsonSerializer.Serialize(OldValues),
                 NewValues = NewValues.Count == 0 ? null : JsonSerializer.Serialize(NewValues),
-                ChangedColumns = ChangedColumns.Count == 0 ? null : JsonSerializer.Serialize(ChangedColumns)
+                ChangedColumns = ChangedColumns.Count == 0 ? null : JsonSerializer.Serialize(ChangedColumns),
+                Metadata = JsonSerializer.Serialize(metadata)
             };
         }
     }
+
+    internal record AuditMetadata(string? IpAddress, string? UserAgent, string? RequestId);
 }

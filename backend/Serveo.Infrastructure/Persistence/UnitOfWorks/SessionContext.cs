@@ -19,6 +19,10 @@ namespace Serveo.Infrastructure.Persistence.UnitOfWorks
         public Guid? BusinessId => TryParseGuid(User?.FindFirstValue(CustomClaimTypes.BusinessId));
         public Guid? BranchId => TryParseGuid(User?.FindFirstValue(CustomClaimTypes.BranchId));
 
+        public string? IpAddress => _accessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+        public string? UserAgent => _accessor.HttpContext?.Request.Headers["User-Agent"].FirstOrDefault();
+        public string? RequestId => _accessor.HttpContext?.TraceIdentifier;
+
         private static long? TryParseLong(string? value) => long.TryParse(value, out var v) ? v : null;
         private static int? TryParseInt(string? value) => int.TryParse(value, out var v) ? v : null;
         private static Guid? TryParseGuid(string? value) => Guid.TryParse(value, out var v) ? v : null;
