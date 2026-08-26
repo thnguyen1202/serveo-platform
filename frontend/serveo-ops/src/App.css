@@ -1,0 +1,19 @@
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+}
+
+.CollapsibleContent {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 300ms ease;
+}
+
+.CollapsibleContent[aria-hidden='false'] {
+  grid-template-rows: 1fr;
+}
+
+.CollapsibleContent > * {
+  overflow: hidden;
+}

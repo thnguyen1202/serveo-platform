@@ -1,0 +1,20 @@
+{
+  "appName": "Serveo",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "language": "Language",
+  "login": {
+    "title": "Login",
+    "description": "Enter your email and password below to log into <br/>your account.",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Sign In"
+  },
+   "validation": {
+    "required": "{{field}} is required",
+    "minLength": "{{field}} must be at least {{min}} characters",
+    "maxLength": "{{field}} must be at most {{max}} characters",
+    "invalidEmail": "Please enter a valid email address"
+  }
+}
