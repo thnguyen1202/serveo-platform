@@ -1,5 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AnalyticsChart } from './analytics-chart';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
 
 export function Analytics() {
   return (
@@ -9,9 +8,7 @@ export function Analytics() {
           <CardTitle>Traffic Overview</CardTitle>
           <CardDescription>Weekly clicks and unique visitors</CardDescription>
         </CardHeader>
-        <CardContent className="px-6">
-          <AnalyticsChart />
-        </CardContent>
+        <CardContent className="px-6"></CardContent>
       </Card>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>

@@ -1,0 +1,3 @@
+lib = cấu hình hoặc adapter cho thư viện bên thứ ba.
+
+lib thường chứa instance, config, hoặc adapter cho thư viện.

@@ -8,31 +8,20 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as authLoginRouteImport } from './routes/(auth)/login'
-import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
-import { Route as AuthenticatedMenuRouteRouteImport } from './routes/_authenticated/menu/route'
-import { Route as AuthenticatedApiKeysIndexRouteImport } from './routes/_authenticated/api-keys/index'
-import { Route as AuthenticatedAuditLogIndexRouteImport } from './routes/_authenticated/audit-log/index'
-import { Route as AuthenticatedBranchesIndexRouteImport } from './routes/_authenticated/branches/index'
-import { Route as AuthenticatedBusinessesIndexRouteImport } from './routes/_authenticated/businesses/index'
-import { Route as AuthenticatedCategoriesIndexRouteImport } from './routes/_authenticated/categories/index'
-import { Route as AuthenticatedKitchenIndexRouteImport } from './routes/_authenticated/kitchen/index'
-import { Route as AuthenticatedLanguagesIndexRouteImport } from './routes/_authenticated/languages/index'
-import { Route as AuthenticatedMenuIndexRouteImport } from './routes/_authenticated/menu/index'
-import { Route as AuthenticatedMenuCategoriesRouteImport } from './routes/_authenticated/menu/categories'
-import { Route as AuthenticatedMenuItemsRouteImport } from './routes/_authenticated/menu/items'
-import { Route as AuthenticatedOrdersIndexRouteImport } from './routes/_authenticated/orders/index'
-import { Route as AuthenticatedProductsIndexRouteImport } from './routes/_authenticated/products/index'
-import { Route as AuthenticatedReportsIndexRouteImport } from './routes/_authenticated/reports/index'
-import { Route as AuthenticatedRolesIndexRouteImport } from './routes/_authenticated/roles/index'
-import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
-import { Route as AuthenticatedShiftsIndexRouteImport } from './routes/_authenticated/shifts/index'
-import { Route as AuthenticatedStaffIndexRouteImport } from './routes/_authenticated/staff/index'
-import { Route as AuthenticatedTablesIndexRouteImport } from './routes/_authenticated/tables/index'
-import { Route as AuthenticatedUserSessionsIndexRouteImport } from './routes/_authenticated/user-sessions/index'
-import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
+import { Route as rootRouteImport } from './app/routes/__root'
+import { Route as AuthenticatedRouteRouteImport } from './app/routes/_authenticated/route'
+import { Route as authLoginRouteImport } from './app/routes/(auth)/login'
+import { Route as AuthenticatedIndexRouteImport } from './app/routes/_authenticated/index'
+import { Route as AuthenticatedCategoriesIndexRouteImport } from './app/routes/_authenticated/categories/index'
+import { Route as AuthenticatedKitchenIndexRouteImport } from './app/routes/_authenticated/kitchen/index'
+import { Route as AuthenticatedMenuIndexRouteImport } from './app/routes/_authenticated/menu/index'
+import { Route as AuthenticatedOrdersIndexRouteImport } from './app/routes/_authenticated/orders/index'
+import { Route as AuthenticatedProductsIndexRouteImport } from './app/routes/_authenticated/products/index'
+import { Route as AuthenticatedReportsIndexRouteImport } from './app/routes/_authenticated/reports/index'
+import { Route as AuthenticatedSettingsIndexRouteImport } from './app/routes/_authenticated/settings/index'
+import { Route as AuthenticatedShiftsIndexRouteImport } from './app/routes/_authenticated/shifts/index'
+import { Route as AuthenticatedStaffIndexRouteImport } from './app/routes/_authenticated/staff/index'
+import { Route as AuthenticatedTablesIndexRouteImport } from './app/routes/_authenticated/tables/index'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -48,35 +37,6 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedMenuRouteRoute = AuthenticatedMenuRouteRouteImport.update({
-  id: '/menu',
-  path: '/menu',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedApiKeysIndexRoute =
-  AuthenticatedApiKeysIndexRouteImport.update({
-    id: '/api-keys/',
-    path: '/api-keys/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedAuditLogIndexRoute =
-  AuthenticatedAuditLogIndexRouteImport.update({
-    id: '/audit-log/',
-    path: '/audit-log/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedBranchesIndexRoute =
-  AuthenticatedBranchesIndexRouteImport.update({
-    id: '/branches/',
-    path: '/branches/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedBusinessesIndexRoute =
-  AuthenticatedBusinessesIndexRouteImport.update({
-    id: '/businesses/',
-    path: '/businesses/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedCategoriesIndexRoute =
   AuthenticatedCategoriesIndexRouteImport.update({
     id: '/categories/',
@@ -89,27 +49,10 @@ const AuthenticatedKitchenIndexRoute =
     path: '/kitchen/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedLanguagesIndexRoute =
-  AuthenticatedLanguagesIndexRouteImport.update({
-    id: '/languages/',
-    path: '/languages/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedMenuIndexRoute = AuthenticatedMenuIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthenticatedMenuRouteRoute,
-} as any)
-const AuthenticatedMenuCategoriesRoute =
-  AuthenticatedMenuCategoriesRouteImport.update({
-    id: '/categories',
-    path: '/categories',
-    getParentRoute: () => AuthenticatedMenuRouteRoute,
-  } as any)
-const AuthenticatedMenuItemsRoute = AuthenticatedMenuItemsRouteImport.update({
-  id: '/items',
-  path: '/items',
-  getParentRoute: () => AuthenticatedMenuRouteRoute,
+  id: '/menu/',
+  path: '/menu/',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedOrdersIndexRoute =
   AuthenticatedOrdersIndexRouteImport.update({
@@ -129,11 +72,6 @@ const AuthenticatedReportsIndexRoute =
     path: '/reports/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedRolesIndexRoute = AuthenticatedRolesIndexRouteImport.update({
-  id: '/roles/',
-  path: '/roles/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
     id: '/settings/',
@@ -157,170 +95,95 @@ const AuthenticatedTablesIndexRoute =
     path: '/tables/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedUserSessionsIndexRoute =
-  AuthenticatedUserSessionsIndexRouteImport.update({
-    id: '/user-sessions/',
-    path: '/user-sessions/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
-  id: '/users/',
-  path: '/users/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
-  '/menu': typeof AuthenticatedMenuRouteRouteWithChildren
   '/login': typeof authLoginRoute
-  '/menu/categories': typeof AuthenticatedMenuCategoriesRoute
-  '/menu/items': typeof AuthenticatedMenuItemsRoute
-  '/api-keys/': typeof AuthenticatedApiKeysIndexRoute
-  '/audit-log/': typeof AuthenticatedAuditLogIndexRoute
-  '/branches/': typeof AuthenticatedBranchesIndexRoute
-  '/businesses/': typeof AuthenticatedBusinessesIndexRoute
   '/categories/': typeof AuthenticatedCategoriesIndexRoute
   '/kitchen/': typeof AuthenticatedKitchenIndexRoute
-  '/languages/': typeof AuthenticatedLanguagesIndexRoute
   '/menu/': typeof AuthenticatedMenuIndexRoute
   '/orders/': typeof AuthenticatedOrdersIndexRoute
   '/products/': typeof AuthenticatedProductsIndexRoute
   '/reports/': typeof AuthenticatedReportsIndexRoute
-  '/roles/': typeof AuthenticatedRolesIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/shifts/': typeof AuthenticatedShiftsIndexRoute
   '/staff/': typeof AuthenticatedStaffIndexRoute
   '/tables/': typeof AuthenticatedTablesIndexRoute
-  '/user-sessions/': typeof AuthenticatedUserSessionsIndexRoute
-  '/users/': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
   '/': typeof AuthenticatedIndexRoute
-  '/menu/categories': typeof AuthenticatedMenuCategoriesRoute
-  '/menu/items': typeof AuthenticatedMenuItemsRoute
-  '/api-keys': typeof AuthenticatedApiKeysIndexRoute
-  '/audit-log': typeof AuthenticatedAuditLogIndexRoute
-  '/branches': typeof AuthenticatedBranchesIndexRoute
-  '/businesses': typeof AuthenticatedBusinessesIndexRoute
   '/categories': typeof AuthenticatedCategoriesIndexRoute
   '/kitchen': typeof AuthenticatedKitchenIndexRoute
-  '/languages': typeof AuthenticatedLanguagesIndexRoute
   '/menu': typeof AuthenticatedMenuIndexRoute
   '/orders': typeof AuthenticatedOrdersIndexRoute
   '/products': typeof AuthenticatedProductsIndexRoute
   '/reports': typeof AuthenticatedReportsIndexRoute
-  '/roles': typeof AuthenticatedRolesIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/shifts': typeof AuthenticatedShiftsIndexRoute
   '/staff': typeof AuthenticatedStaffIndexRoute
   '/tables': typeof AuthenticatedTablesIndexRoute
-  '/user-sessions': typeof AuthenticatedUserSessionsIndexRoute
-  '/users': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/_authenticated/menu': typeof AuthenticatedMenuRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/menu/categories': typeof AuthenticatedMenuCategoriesRoute
-  '/_authenticated/menu/items': typeof AuthenticatedMenuItemsRoute
-  '/_authenticated/api-keys/': typeof AuthenticatedApiKeysIndexRoute
-  '/_authenticated/audit-log/': typeof AuthenticatedAuditLogIndexRoute
-  '/_authenticated/branches/': typeof AuthenticatedBranchesIndexRoute
-  '/_authenticated/businesses/': typeof AuthenticatedBusinessesIndexRoute
   '/_authenticated/categories/': typeof AuthenticatedCategoriesIndexRoute
   '/_authenticated/kitchen/': typeof AuthenticatedKitchenIndexRoute
-  '/_authenticated/languages/': typeof AuthenticatedLanguagesIndexRoute
   '/_authenticated/menu/': typeof AuthenticatedMenuIndexRoute
   '/_authenticated/orders/': typeof AuthenticatedOrdersIndexRoute
   '/_authenticated/products/': typeof AuthenticatedProductsIndexRoute
   '/_authenticated/reports/': typeof AuthenticatedReportsIndexRoute
-  '/_authenticated/roles/': typeof AuthenticatedRolesIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/shifts/': typeof AuthenticatedShiftsIndexRoute
   '/_authenticated/staff/': typeof AuthenticatedStaffIndexRoute
   '/_authenticated/tables/': typeof AuthenticatedTablesIndexRoute
-  '/_authenticated/user-sessions/': typeof AuthenticatedUserSessionsIndexRoute
-  '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/menu'
     | '/login'
-    | '/menu/categories'
-    | '/menu/items'
-    | '/api-keys/'
-    | '/audit-log/'
-    | '/branches/'
-    | '/businesses/'
     | '/categories/'
     | '/kitchen/'
-    | '/languages/'
     | '/menu/'
     | '/orders/'
     | '/products/'
     | '/reports/'
-    | '/roles/'
     | '/settings/'
     | '/shifts/'
     | '/staff/'
     | '/tables/'
-    | '/user-sessions/'
-    | '/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
     | '/'
-    | '/menu/categories'
-    | '/menu/items'
-    | '/api-keys'
-    | '/audit-log'
-    | '/branches'
-    | '/businesses'
     | '/categories'
     | '/kitchen'
-    | '/languages'
     | '/menu'
     | '/orders'
     | '/products'
     | '/reports'
-    | '/roles'
     | '/settings'
     | '/shifts'
     | '/staff'
     | '/tables'
-    | '/user-sessions'
-    | '/users'
   id:
     | '__root__'
     | '/_authenticated'
-    | '/_authenticated/menu'
     | '/(auth)/login'
     | '/_authenticated/'
-    | '/_authenticated/menu/categories'
-    | '/_authenticated/menu/items'
-    | '/_authenticated/api-keys/'
-    | '/_authenticated/audit-log/'
-    | '/_authenticated/branches/'
-    | '/_authenticated/businesses/'
     | '/_authenticated/categories/'
     | '/_authenticated/kitchen/'
-    | '/_authenticated/languages/'
     | '/_authenticated/menu/'
     | '/_authenticated/orders/'
     | '/_authenticated/products/'
     | '/_authenticated/reports/'
-    | '/_authenticated/roles/'
     | '/_authenticated/settings/'
     | '/_authenticated/shifts/'
     | '/_authenticated/staff/'
     | '/_authenticated/tables/'
-    | '/_authenticated/user-sessions/'
-    | '/_authenticated/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -351,41 +214,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/menu': {
-      id: '/_authenticated/menu'
-      path: '/menu'
-      fullPath: '/menu'
-      preLoaderRoute: typeof AuthenticatedMenuRouteRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/api-keys/': {
-      id: '/_authenticated/api-keys/'
-      path: '/api-keys'
-      fullPath: '/api-keys/'
-      preLoaderRoute: typeof AuthenticatedApiKeysIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/audit-log/': {
-      id: '/_authenticated/audit-log/'
-      path: '/audit-log'
-      fullPath: '/audit-log/'
-      preLoaderRoute: typeof AuthenticatedAuditLogIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/branches/': {
-      id: '/_authenticated/branches/'
-      path: '/branches'
-      fullPath: '/branches/'
-      preLoaderRoute: typeof AuthenticatedBranchesIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/businesses/': {
-      id: '/_authenticated/businesses/'
-      path: '/businesses'
-      fullPath: '/businesses/'
-      preLoaderRoute: typeof AuthenticatedBusinessesIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/categories/': {
       id: '/_authenticated/categories/'
       path: '/categories'
@@ -400,33 +228,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedKitchenIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/languages/': {
-      id: '/_authenticated/languages/'
-      path: '/languages'
-      fullPath: '/languages/'
-      preLoaderRoute: typeof AuthenticatedLanguagesIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/menu/': {
       id: '/_authenticated/menu/'
-      path: '/'
+      path: '/menu'
       fullPath: '/menu/'
       preLoaderRoute: typeof AuthenticatedMenuIndexRouteImport
-      parentRoute: typeof AuthenticatedMenuRouteRoute
-    }
-    '/_authenticated/menu/categories': {
-      id: '/_authenticated/menu/categories'
-      path: '/categories'
-      fullPath: '/menu/categories'
-      preLoaderRoute: typeof AuthenticatedMenuCategoriesRouteImport
-      parentRoute: typeof AuthenticatedMenuRouteRoute
-    }
-    '/_authenticated/menu/items': {
-      id: '/_authenticated/menu/items'
-      path: '/items'
-      fullPath: '/menu/items'
-      preLoaderRoute: typeof AuthenticatedMenuItemsRouteImport
-      parentRoute: typeof AuthenticatedMenuRouteRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/orders/': {
       id: '/_authenticated/orders/'
@@ -447,13 +254,6 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/reports/'
       preLoaderRoute: typeof AuthenticatedReportsIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/roles/': {
-      id: '/_authenticated/roles/'
-      path: '/roles'
-      fullPath: '/roles/'
-      preLoaderRoute: typeof AuthenticatedRolesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/settings/': {
@@ -484,83 +284,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTablesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/user-sessions/': {
-      id: '/_authenticated/user-sessions/'
-      path: '/user-sessions'
-      fullPath: '/user-sessions/'
-      preLoaderRoute: typeof AuthenticatedUserSessionsIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/users/': {
-      id: '/_authenticated/users/'
-      path: '/users'
-      fullPath: '/users/'
-      preLoaderRoute: typeof AuthenticatedUsersIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
   }
 }
-
-interface AuthenticatedMenuRouteRouteChildren {
-  AuthenticatedMenuCategoriesRoute: typeof AuthenticatedMenuCategoriesRoute
-  AuthenticatedMenuItemsRoute: typeof AuthenticatedMenuItemsRoute
-  AuthenticatedMenuIndexRoute: typeof AuthenticatedMenuIndexRoute
-}
-
-const AuthenticatedMenuRouteRouteChildren: AuthenticatedMenuRouteRouteChildren =
-  {
-    AuthenticatedMenuCategoriesRoute: AuthenticatedMenuCategoriesRoute,
-    AuthenticatedMenuItemsRoute: AuthenticatedMenuItemsRoute,
-    AuthenticatedMenuIndexRoute: AuthenticatedMenuIndexRoute,
-  }
-
-const AuthenticatedMenuRouteRouteWithChildren =
-  AuthenticatedMenuRouteRoute._addFileChildren(
-    AuthenticatedMenuRouteRouteChildren,
-  )
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedMenuRouteRoute: typeof AuthenticatedMenuRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedApiKeysIndexRoute: typeof AuthenticatedApiKeysIndexRoute
-  AuthenticatedAuditLogIndexRoute: typeof AuthenticatedAuditLogIndexRoute
-  AuthenticatedBranchesIndexRoute: typeof AuthenticatedBranchesIndexRoute
-  AuthenticatedBusinessesIndexRoute: typeof AuthenticatedBusinessesIndexRoute
   AuthenticatedCategoriesIndexRoute: typeof AuthenticatedCategoriesIndexRoute
   AuthenticatedKitchenIndexRoute: typeof AuthenticatedKitchenIndexRoute
-  AuthenticatedLanguagesIndexRoute: typeof AuthenticatedLanguagesIndexRoute
+  AuthenticatedMenuIndexRoute: typeof AuthenticatedMenuIndexRoute
   AuthenticatedOrdersIndexRoute: typeof AuthenticatedOrdersIndexRoute
   AuthenticatedProductsIndexRoute: typeof AuthenticatedProductsIndexRoute
   AuthenticatedReportsIndexRoute: typeof AuthenticatedReportsIndexRoute
-  AuthenticatedRolesIndexRoute: typeof AuthenticatedRolesIndexRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
   AuthenticatedShiftsIndexRoute: typeof AuthenticatedShiftsIndexRoute
   AuthenticatedStaffIndexRoute: typeof AuthenticatedStaffIndexRoute
   AuthenticatedTablesIndexRoute: typeof AuthenticatedTablesIndexRoute
-  AuthenticatedUserSessionsIndexRoute: typeof AuthenticatedUserSessionsIndexRoute
-  AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedMenuRouteRoute: AuthenticatedMenuRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedApiKeysIndexRoute: AuthenticatedApiKeysIndexRoute,
-  AuthenticatedAuditLogIndexRoute: AuthenticatedAuditLogIndexRoute,
-  AuthenticatedBranchesIndexRoute: AuthenticatedBranchesIndexRoute,
-  AuthenticatedBusinessesIndexRoute: AuthenticatedBusinessesIndexRoute,
   AuthenticatedCategoriesIndexRoute: AuthenticatedCategoriesIndexRoute,
   AuthenticatedKitchenIndexRoute: AuthenticatedKitchenIndexRoute,
-  AuthenticatedLanguagesIndexRoute: AuthenticatedLanguagesIndexRoute,
+  AuthenticatedMenuIndexRoute: AuthenticatedMenuIndexRoute,
   AuthenticatedOrdersIndexRoute: AuthenticatedOrdersIndexRoute,
   AuthenticatedProductsIndexRoute: AuthenticatedProductsIndexRoute,
   AuthenticatedReportsIndexRoute: AuthenticatedReportsIndexRoute,
-  AuthenticatedRolesIndexRoute: AuthenticatedRolesIndexRoute,
   AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
   AuthenticatedShiftsIndexRoute: AuthenticatedShiftsIndexRoute,
   AuthenticatedStaffIndexRoute: AuthenticatedStaffIndexRoute,
   AuthenticatedTablesIndexRoute: AuthenticatedTablesIndexRoute,
-  AuthenticatedUserSessionsIndexRoute: AuthenticatedUserSessionsIndexRoute,
-  AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

@@ -1,4 +1,4 @@
-import useDialogState from '@/hooks/use-dialog-state';
+import useDialogState from '@/shared/hooks/use-dialog-state';
 import React from 'react';
 import { useState } from 'react';
 

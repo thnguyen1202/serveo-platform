@@ -1,29 +1,29 @@
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { useLogin } from '../hooks/use-login';
+import { useLogin } from '../auth.mutations';
 import { useNavigate } from '@tanstack/react-router';
-import { handleFormApiError } from '@/hooks/use-form-error';
+import { handleFormApiError } from '@/shared/hooks/use-form-error';
 import { cn } from '@/lib/utils';
 import { LoaderCircle } from 'lucide-react';
-import { FieldGroup } from '@/components/ui/field';
-import { FormInput } from '@/components/common/form-input';
-import { Button } from '@/components/ui/button';
+import { FieldGroup } from '@/shared/components/ui/field';
+import { FormInput } from '@/shared/components/common/form-input';
+import { Button } from '@/shared/components/ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form } from '@/components/common/form';
-import { deviceStorage } from '@/lib/device-storage';
+import { Form } from '@/shared/components/common/form';
+import { deviceStorage } from '@/shared/config/device.storage';
 import { toast } from 'sonner';
-import { FormCheckbox } from '@/components/common/form-checkbox';
+import { FormCheckbox } from '@/shared/components/common/form-checkbox';
 import { useTranslation } from 'react-i18next';
-import { AlertError } from '@/components/common/alert-error';
+import { AlertError } from '@/shared/components/common/alert-error';
 
-const formSchema = z.object({
+const loginSchema = z.object({
   email: z.email({ message: 'validation.invalidEmail' }).min(1, 'validation.required'),
   password: z.string().min(1, 'validation.required'),
   isRemember: z.boolean(),
   deviceId: z.string().optional(),
   clientType: z.number().optional(),
 });
-type LoginFormValues = z.infer<typeof formSchema>;
+type LoginFormValues = z.infer<typeof loginSchema>;
 type LoginFormProps = React.ComponentProps<'form'> & {
   redirectTo?: string;
 };
@@ -31,7 +31,7 @@ type LoginFormProps = React.ComponentProps<'form'> & {
 export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
   const { t } = useTranslation('common');
   const form = useForm<LoginFormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
       password: '',
@@ -47,7 +47,6 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
 
   async function onSubmit(values: LoginFormValues) {
     try {
-      console.log('LoginForm:onSubmit', values);
       await loginMutation.mutateAsync(values);
 
       navigate({
