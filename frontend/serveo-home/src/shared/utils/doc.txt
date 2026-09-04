@@ -1,0 +1,4 @@
+shared/utils = các hàm tiện ích do bạn viết
+Đây là nơi chứa các hàm không phụ thuộc framework hay thư viện cụ thể.
+
+

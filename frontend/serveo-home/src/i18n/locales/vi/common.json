@@ -1,0 +1,43 @@
+{
+  "appName": "Serveo",
+  "save": "Lưu",
+  "cancel": "Hủy",
+  "delete": "Xóa",
+  "edit": "Sửa",
+  "create": "Tạo mới",
+  "language": "Ngôn ngữ",
+  "login": {
+    "title": "Đăng nhập",
+    "description": "Nhập email và mật khẩu của bạn bên dưới để đăng nhập <br/>vào tài khoản của bạn.",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "submit": "Đăng nhập",
+    "remember": "Ghi nhớ tôi"
+  },
+  "logout": {
+    "title": "Đăng xuất",
+    "description": "Bạn có chắc chắn muốn đăng xuất không? Bạn sẽ cần đăng nhập lại để truy cập vào tài khoản của mình."
+  },
+  "menu": {
+    "dashboard": "Tổng quan",
+    "users": "Người dùng",
+    "roles": "Vai trò",
+    "settings": "Cấu hình",
+    "main.description": "Quản lý cài đặt menu và cấu hình các tùy chọn menu."
+  },
+  "fields": {
+    "fullName": "Full name",
+    "email": "Email",
+    "password": "Mật khẩu"
+  },
+  "validation": {
+    "required": "Vui lòng nhập {{field}}",
+    "minLength": "{{field}} phải có ít nhất {{min}} ký tự",
+    "maxLength": "{{field}} không được vượt quá {{max}} ký tự",
+    "invalidEmail": "Vui lòng nhập địa chỉ email hợp lệ"
+  },
+  "error": {
+    "request.timeout": "Kết nối mạng quá chậm hoặc Server không phản hồi. Vui lòng thử lại sau!",
+    "login_failed": "Đăng nhập thất bại"
+  }
+}
