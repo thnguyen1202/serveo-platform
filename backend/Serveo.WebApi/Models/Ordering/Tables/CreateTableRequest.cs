@@ -10,6 +10,6 @@ namespace Serveo.WebApi.Models.Ordering.Tables
 
         public int Capacity { get; set; } = 2;
 
-        public Guid BranchId { get; set; }
+        public Guid? BranchId { get; set; }
     }
 }

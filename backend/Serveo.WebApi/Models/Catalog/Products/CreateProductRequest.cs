@@ -4,6 +4,8 @@ namespace Serveo.WebApi.Models.Catalog.Products
 {
     public class CreateProductRequest
     {
+        public Guid CategoryId { get; set; }
+
         [Required]
         [StringLength(128)]
         public string Name { get; set; } = default!;
@@ -15,7 +17,6 @@ namespace Serveo.WebApi.Models.Catalog.Products
 
         public string? ImageUrl { get; set; }
 
-        public Guid CategoryId { get; set; }
-        public Guid BusinessId { get; set; }
+        public Guid? BusinessId { get; set; }
     }
 }

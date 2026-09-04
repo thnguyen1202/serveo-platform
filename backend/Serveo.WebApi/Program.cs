@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Scalar.AspNetCore;
+using Serilog;
 using Serveo.Application;
 using Serveo.Application.Abstractions;
 using Serveo.Application.DependencyInjection;
@@ -14,6 +15,24 @@ using System.Text.Json;
 using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// 1. Thêm dịch vụ Controller (cho các đường dẫn Web API)
+builder.Services.AddControllers();
+
+// Cấu hình Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+builder.Host.UseSerilog();
+//Log.Logger = new LoggerConfiguration()
+//    .MinimumLevel.Information()
+//    .WriteTo.Console()
+//    .WriteTo.File(
+//        "Logs/log-.txt",
+//        rollingInterval: RollingInterval.Day,
+//        retainedFileCountLimit: 30,
+//        shared: true)
+//    .CreateLogger();
 
 // 1. Đăng ký Rate Limiter Policy cho CSRF
 builder.Services.AddRateLimiter(options =>
@@ -105,6 +124,15 @@ builder.Services.AddCors(options =>
             .WithOrigins(
                 "http://localhost:5173"
             )
+            //.SetIsOriginAllowed(origin =>
+            //{
+            //    var host = new Uri(origin).Host;
+
+            //    // Cho phép *.serveo.app (Prod) hoặc *.serveo.test / localhost (Dev)
+            //    return host == "serveo.app" || host.EndsWith(".serveo.app")
+            //        || host == "serveo.test" || host.EndsWith(".serveo.test")
+            //        || host == "localhost";
+            //})
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -278,27 +306,33 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-
-
 #if DEBUG
     using var scope = app.Services.CreateScope();
     SeedDataDefault.Initialize(scope.ServiceProvider);
 #endif
 }
 
-app.MapOpenApi();
-
-// https://scalar.com/products/api-references/integrations/aspnetcore/integration
-app.MapScalarApiReference(options =>
+if (!app.Environment.IsProduction())
 {
-    options.SortTagsAlphabetically();
-});
+    app.MapOpenApi();
+
+    // https://scalar.com/products/api-references/integrations/aspnetcore/integration
+    app.MapScalarApiReference(options =>
+    {
+        options.SortTagsAlphabetically();
+    });
+}
+
 
 app.MapGet("/env", (IWebHostEnvironment env) =>
 {
     return env.EnvironmentName;
 });
 
+
+app.UseDefaultFiles(); // Cho phép ứng dụng phục vụ Default Files (như index.html)
+app.UseStaticFiles(); // Cho phép ứng dụng phục vụ Static Files từ thư mục wwwroot (js, css, images,...)
+app.UseRouting();
 
 app.UseHttpsRedirection();
 app.UseForwardedHeaders();
@@ -309,11 +343,36 @@ app.UseExceptionHandler(); // ExceptionHandler
 app.UseRateLimiter(); // Bật Middleware Rate Limiting
 app.UseCors("ServeoOps");
 
+
 app.UseAuthentication();
 app.UseAuthorization();
 
+// 4. Map các Controllers API (ví dụ các đường dẫn dạng /api/[controller])
 app.MapControllers(); // API endpoints
-app.MapControllerRoute(name: "areas", pattern: "{area:exists}/{controller=dashboard}/{action=index}/{id?}");
-app.MapControllerRoute(name: "default", pattern: "{controller=home}/{action=index}/{id?}").WithStaticAssets();
+//app.MapControllerRoute(name: "areas", pattern: "{area:exists}/{controller=dashboard}/{action=index}/{id?}");
+//app.MapControllerRoute(name: "default", pattern: "{controller=home}/{action=index}/{id?}").WithStaticAssets();
+
+// 5. Cấu hình SPA Fallback Routing
+// Bất kỳ route nào không khớp với API Controllers sẽ được hướng về index.html của React
+app.MapFallbackToFile("{*path}", "index.html");// Home SPA - default
+
+
+// Cấu hình fallback theo Host / Subdomain
+// Lưu ý: Thay *.serveo.test (khi dev) hoặc *.serveo.app (khi production)
+
+// 1. Admin Subdomain
+//app.MapFallbackToFile("admin/index.html")
+//   .RequireHost("admin.serveo.app", "admin.serveo.test", "admin.localhost");
+
+//// 2. Ops Subdomain
+//app.MapFallbackToFile("ops/index.html")
+//   .RequireHost("ops.serveo.app", "ops.serveo.test", "ops.localhost");
+
+//// 3. QR Subdomain
+//app.MapFallbackToFile("qr/index.html")
+//   .RequireHost("qr.serveo.app", "qr.serveo.test", "qr.localhost");
+
+//// 4. Default Fallback (cho serveo.app, ord
+//app.MapFallbackToFile("index.html");
 
 app.Run();

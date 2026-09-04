@@ -9,9 +9,13 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\Ordering\**" />
+    <Compile Remove="wwwroot\lib\**" />
     <Content Remove="Controllers\Ordering\**" />
+    <Content Remove="wwwroot\lib\**" />
     <EmbeddedResource Remove="Controllers\Ordering\**" />
+    <EmbeddedResource Remove="wwwroot\lib\**" />
     <None Remove="Controllers\Ordering\**" />
+    <None Remove="wwwroot\lib\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +34,8 @@
     </PackageReference>
     <PackageReference Include="Microsoft.OpenApi" Version="2.7.5" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.16.12" />
+    <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
     <PackageReference Include="UAParser" Version="3.1.47" />
   </ItemGroup>
 
@@ -39,7 +45,6 @@
 
   <ItemGroup>
     <Folder Include="Hubs\" />
-    <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
 </Project>

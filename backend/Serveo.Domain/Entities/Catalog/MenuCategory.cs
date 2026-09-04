@@ -1,6 +1,8 @@
-﻿namespace Serveo.Domain.Entities.Catalog
+﻿using Serveo.Domain.Entities.Base;
+
+namespace Serveo.Domain.Entities.Catalog
 {
-    public sealed class MenuCategory
+    public sealed class MenuCategory: Entity
     {
         public Guid MenuId { get; set; }
         public Guid CategoryId { get; set; }

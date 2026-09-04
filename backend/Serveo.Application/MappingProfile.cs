@@ -29,8 +29,8 @@ namespace Serveo.Application
 
                 cfg.CreateMap<Category, CategoryDto>();
                 cfg.CreateMap<Product, ProductDto>();
-                cfg.CreateMap<Menu, MenuDto>()
-                    .ForMember(d => d.Products, opt => opt.MapFrom(s => s.MenuProducts.Select(mp => mp.Product)));
+                //cfg.CreateMap<Menu, MenuDto>()
+                //    .ForMember(d => d.Products, opt => opt.MapFrom(s => s.MenuProducts.Select(mp => mp.Product)));
 
                 cfg.CreateMap<Table, TableDto>();
 

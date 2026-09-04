@@ -9,11 +9,15 @@ namespace Serveo.Infrastructure.Persistence.EntityFramework.Configurations.Modul
     {
         public void Configure(EntityTypeBuilder<MenuProduct> builder)
         {
-            builder.HasKey(r => new { r.MenuId, r.ProductId });
+            //builder.HasKey(r => new { r.MenuId, r.ProductId });
+            //builder.HasIndex(x => x.ProductId);
+
+            builder.HasIndex(u => new { u.MenuId, u.ProductId })
+                .IsUnique();
 
             builder.Property(u => u.PriceOverride).HasColumnType(DbDecimals.Money);
 
-            builder.HasIndex(x => x.ProductId);
+            
 
             builder.HasOne(x => x.Menu)
                 .WithMany(x => x.MenuProducts)

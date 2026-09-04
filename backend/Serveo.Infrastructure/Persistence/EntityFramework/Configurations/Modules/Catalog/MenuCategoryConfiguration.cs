@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Serveo.Domain.Entities.Base;
 using Serveo.Domain.Entities.Catalog;
+using System.Reflection.Emit;
 
 namespace Serveo.Infrastructure.Persistence.EntityFramework.Configurations.Modules.Catalog
 {
@@ -9,9 +10,11 @@ namespace Serveo.Infrastructure.Persistence.EntityFramework.Configurations.Modul
     {
         public void Configure(EntityTypeBuilder<MenuCategory> builder)
         {
-            builder.HasKey(r => new { r.MenuId, r.CategoryId });
+            //builder.HasKey(r => new { r.MenuId, r.CategoryId });
+            //builder.HasIndex(x => x.CategoryId);
 
-            builder.HasIndex(x => x.CategoryId);
+            builder.HasIndex(u => new { u.MenuId, u.CategoryId })
+                .IsUnique();
 
             builder.HasOne(x => x.Menu)
                 .WithMany(x => x.MenuCategories)

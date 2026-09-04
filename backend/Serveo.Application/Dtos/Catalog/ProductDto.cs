@@ -7,7 +7,7 @@
         public decimal Price { get; set; }
         public string? ImageUrl { get; set; }
 
-        public CategoryDto? Category { get; set; } = null;
-        public ICollection<ProductTranslationDto>? Translations { get; set; } = null;
+        //public CategoryDto? Category { get; set; } = null;
+        public ICollection<ProductTranslationDto> Translations { get; set; } = [];
     }
 }

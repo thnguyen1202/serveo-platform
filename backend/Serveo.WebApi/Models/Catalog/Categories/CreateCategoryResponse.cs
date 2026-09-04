@@ -2,12 +2,9 @@
 
 namespace Serveo.WebApi.Models.Catalog.Categories
 {
-    public class CreateCategoryRequest
+    public class CreateCategoryResponse
     {
-        [Required]
-        [StringLength(128)]
+        public Guid Id { get; set; }
         public string Name { get; set; } = default!;
-
-        public Guid? BusinessId { get; set; }
     }
 }

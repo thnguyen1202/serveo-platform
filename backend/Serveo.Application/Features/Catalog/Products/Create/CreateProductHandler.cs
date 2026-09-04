@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Serveo.Application.Abstractions;
 using Serveo.Application.Abstractions.Mediator;
 using Serveo.Application.Services;
@@ -8,19 +9,41 @@ namespace Serveo.Application.Features.Catalog.Products.Create
 {
     public sealed class CreateProductHandler(
         IUnitOfWork unitOfWork,
-        IMapper mapper
+        CommandMapper mapper
     ) : ICommandHandler<CreateProductCommand, ICommandResult<CreateProductResult>>
     {
-        private readonly IUnitOfWork _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-        private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-
         public async Task<ICommandResult<CreateProductResult>> HandleAsync(CreateProductCommand request, CancellationToken ct)
         {
             var entity = new Product();
-            _unitOfWork.SetValues(entity, request);
-            await _unitOfWork.SaveChangesAsync(ct);
+            unitOfWork.SetValues(entity, request);
 
-            return CommandResult<CreateProductResult>.Success(_mapper.Map<CreateProductResult>(entity));
+            var result = await unitOfWork.ExecuteAsync(async () =>
+            {
+                // create Product
+                unitOfWork.Add(entity);
+
+                // create MenuProduct
+                if (request.MenuId.HasValue)
+                {
+                    var maxDisplayOrder = await unitOfWork.Set<MenuProduct>()
+                        .Where(x => x.MenuId == request.MenuId)
+                        .Select(x => (int?)x.DisplayOrder)
+                        .MaxAsync() ?? 0;
+
+                    unitOfWork.Add(new MenuProduct
+                    {
+                        MenuId = request.MenuId.Value,
+                        ProductId = entity.Id,
+                        PriceOverride = entity.Price,
+                        IsVisible = true,
+                        DisplayOrder = ++maxDisplayOrder
+                    });
+                }
+
+                return mapper.ToResult(entity);
+            }, ct);
+
+            return CommandResult<CreateProductResult>.Success(result);
         }
     }
 }

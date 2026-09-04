@@ -6,6 +6,7 @@
         public const string Auth = "01. Auth";
         public const string Me = "01. Me";
         public const string Catalog = "04. Catalog";
+        public const string Menus = "04. Menus";
         public const string Tenanting = "03. Tenanting";
         public const string Admin = "03. Admin";
         public const string Ordering = "05. Ordering";

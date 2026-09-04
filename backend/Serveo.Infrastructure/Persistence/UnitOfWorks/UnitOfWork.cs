@@ -129,7 +129,7 @@ namespace Serveo.Infrastructure.Persistence.UnitOfWorks
                 await CommitAsync(ct);
                 return result;
             }
-            catch
+            catch (Exception)
             {
                 await RollbackAsync(ct);
                 throw;
